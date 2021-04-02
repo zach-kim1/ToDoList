@@ -22,7 +22,7 @@ function App(props) {
   const [tasks, setTasks] = useState(props.tasks);
   const [filter, setFilter] = useState('All');
   function addTask(name) {
-    const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
+    const newTask = { id: "todo-" + nanoid(), name: name, completed: false, note:"" };
     setTasks([...tasks, newTask]);
   }
   function toggleTaskCompleted(id) {
@@ -42,6 +42,17 @@ function App(props) {
     const remainingTasks = tasks.filter(task => id !== task.id);
     setTasks(remainingTasks);
   }
+  function deleteNote(id) {
+    const editedTaskList = tasks.map(task => {
+      // if this task has the same ID as the edited task
+        if (id === task.id) {
+          //
+          return {...task, note: ""}
+        }
+        return task;
+      });
+      setTasks(editedTaskList);
+  }
   function editTask(id, newName) {
     const editedTaskList = tasks.map(task => {
     // if this task has the same ID as the edited task
@@ -53,15 +64,30 @@ function App(props) {
     });
     setTasks(editedTaskList);
   }
+  function editNote(id, newNote) {
+    const editedTaskList = tasks.map(task => {
+    // if this task has the same ID as the edited task
+      if (id === task.id) {
+        //
+        return {...task, note: newNote}
+      }
+      return task;
+    });
+    setTasks(editedTaskList);
+  }
   const taskList = tasks.filter(FILTER_MAP[filter]).map(task => (
     <Todo
         id={task.id}
         name={task.name}
         completed={task.completed}
+        note ={task.note}
         key={task.id}
         toggleTaskCompleted={toggleTaskCompleted}
         deleteTask={deleteTask}
         editTask ={editTask}
+        editNote ={editNote}
+        deleteNote={deleteNote}
+
       />
     )
   );
@@ -78,13 +104,12 @@ function App(props) {
   const tasksNoun = taskList.length !== 1 ? 'tasks' : 'task';
   const headingText = `${taskList.length} ${tasksNoun} remaining`;
   return (
-    
     <div className="todoapp stack-large">
       <Form addTask={addTask} />
       <div className="filters btn-group stack-exception">
         {filterList}
       </div>
-      <h2 id="list-heading">{headingText}</h2>
+      <h2 id="list-heading" >{headingText}</h2>
       <ul
         className="todo-list stack-large stack-exception"
         aria-labelledby="list-heading"

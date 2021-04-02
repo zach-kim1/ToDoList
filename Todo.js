@@ -6,8 +6,11 @@ import ButtonGroup from '@material-ui/core/BUttonGroup';
 
 
 export default function Todo(props) {
-  const [isEditing, setEditing] = useState(false);
+  const [isEditingName, setEditingName] = useState(false);
+  const [isEditingNote, setEditingNote] = useState(false);
+
   const [newName, setNewName] = useState('');
+  const[newNote,setNewNote] = useState('');
   function handleChange(e){
     setNewName(e.target.value)
   }
@@ -15,7 +18,16 @@ export default function Todo(props) {
     e.preventDefault();
     props.editTask(props.id, newName);
     setNewName("");
-    setEditing(false);
+    setEditingName(false);
+  }
+  function handleNewNote(e){
+    setNewNote(e.target.value)
+  }
+  function handleSubmitNote(e){
+    e.preventDefault();
+    props.editNote(props.id, newNote);
+    setNewNote("");
+    setEditingNote(false);
   }
   const editingTemplate = (
     <form className="stack-small" onSubmit={handleSubmit}>
@@ -34,7 +46,7 @@ export default function Todo(props) {
       <div className="btn-group">
         <Button type="button" 
           className="btn todo-cancel"
-          onClick={() => setEditing(false)}
+          onClick={() => setEditingName(false)}
         >
           Cancel
           <span className="visually-hidden">renaming {props.name}</span>
@@ -42,6 +54,42 @@ export default function Todo(props) {
         <Button type="submit" className="btn btn__primary todo-edit">
           Save
           <span className="visually-hidden">new name for {props.name}</span>
+        </Button>
+      </div>
+    </form>
+  );
+  const editingNoteTemplate = (
+    <form className="stack-small" onSubmit={handleSubmitNote}>
+      <div className="form-group">
+        <label className="todo-label" htmlFor={props.id}>
+          New note for task {props.name}
+        </label>
+        <input 
+          id={props.id} 
+          className="todo-text" 
+          type="text" 
+          value = {newNote}
+          onChange = {handleNewNote}
+        />
+      </div>
+      <div className="btn-group">
+        <Button type="button" 
+          className="btn todo-cancel"
+          onClick={() => setEditingNote(false)}
+        >
+          Cancel
+          <span className="visually-hidden">renaming {props.note}</span>
+        </Button>
+        <Button type="submit" className="btn btn__primary todo-edit">
+          Save
+          <span className="visually-hidden">new note for {props.note}</span>
+        </Button>
+        <Button
+          type="button"
+          className="btn btn__danger"
+          onClick={() => props.deleteNote(props.id)}
+        >
+          Delete <span className="visually-hidden">{props.note}</span>
         </Button>
       </div>
     </form>
@@ -57,17 +105,20 @@ export default function Todo(props) {
           />
           <label className="todo-label" htmlFor={props.id}>
             {props.name}
+            <ul>
+              <li> Note: {props.note} </li>  
+            </ul>
           </label>
         </div>
         <div className="btn-group">
           <Button 
             type="button" 
             className="btn" 
-            onClick={() => setEditing(true)}
+            onClick={() => setEditingName(true)}
             variant = "contained"
             color = "default"
           >
-            Edit <span className="visually-hidden">{props.name}</span>
+            Edit Name <span className="visually-hidden">{props.name}</span>
           </Button>
           <Button
             type="button"
@@ -81,15 +132,19 @@ export default function Todo(props) {
           <Button 
             type="button" 
             className="btn" 
+            onClick={() => setEditingNote(true)}
             variant = "contained"
             color = "default"
           >
-           Add Note <span className="visually-hidden">{props.name}</span>
+           Edit Note <span className="visually-hidden">{props.name}</span>
           </Button>
         </div>
     </div>
   );
     return (
-      <li className="todo">{isEditing ? editingTemplate : viewTemplate}</li> 
+      <li className="todo">
+      {isEditingName ? editingTemplate : viewTemplate}
+      {isEditingNote ? editingNoteTemplate: isEditingNote}
+      </li> 
       );
     }

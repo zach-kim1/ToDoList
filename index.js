@@ -5,9 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const DATA = [
-  { id: "todo-0", name: "Eat", completed: true, Note:"" },
-  { id: "todo-1", name: "Sleep", completed: false },
-  { id: "todo-2", name: "Repeat", completed: false }
+  { id: "todo-0", name: "Eat", completed: true, note: "Run" },
+  { id: "todo-1", name: "Sleep", completed: false,note: "help " },
+  { id: "todo-2", name: "Repeat", completed: false, note: "me" }
 ];
 
 /*
